@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.sut.pro.dao.LjDao">
+	
+	
+	<select id="xsxmcx" parameterType="String" resultType="stuinfo">
+		select * from stu where name= #{xsxm}
+	</select>
+	
+	<select id="xsqscx" parameterType="String" resultType="stuinfo">
+		select * from stu where rmname= #{xsqs}
+	</select>
+	<select id="xsxhcx" parameterType="String" resultType="stuinfo">
+		select * from stu where snum= #{xsxh}
+	</select>
+    <select id="xszycx" parameterType="String" resultType="stuinfo">
+		select * from stu where majo= #{xszy}
+	</select>
+	  <select id="xsqycx" parameterType="String" resultType="stuinfo">
+		select * from stu where dormnum=#{dormnum} order by rmname ASC
+	</select>
+	
+	<select id="fjqcx"  parameterType="String" resultType="roominfo">
+		select * from f_room where dormnum=#{dormnum} order by floor ASC
+	</select>
+	<select id="fjfloorcx" parameterType="roominfo" resultType="roominfo">
+		select * from f_room where floor=#{floor} and dormnum=#{dormnum} order by floor ASC
+	</select>
+	
+		<select id="checkroommate" parameterType="String" resultType="roommate">
+		select * from stu where rmname=#{rmname}
+	</select>
+	
+	<select id="qjtz" parameterType="qjtzinfo" resultType="qjtzinfo"><!-- 楼宇获取区级通知 -->
+		select * from info_qj where dormnum=#{dormnum} and statu='0' or statu='2'
+	</select>
+	<select id="UsertoLj" parameterType="String" resultType="ljinfo">
+		select * from ma_lj where wnum=#{account} 
+	</select>
+	<update id="lj_copy" parameterType="String">
+		update info_qj
+		set 
+		   statu='1'
+		where
+			sid = #{sid} 
+	</update>
+	<update id="qjtzgq" parameterType="ljinfo">
+		update info_qj
+		set 
+		   statu='2'<!--通知： 0为未收到，1为收到，2为过期 -->
+		where
+			dormnum=#{dormnum} and TIMESTAMPDIFF(DAY,date,now()) > 14 and TIMESTAMPDIFF(month,date,now())=0 
+	</update>
+	<select id="lcwz" parameterType="String" resultType="wzhzinfo">
+		select * from ma_lcwzhz where dormnum=#{dormnum} and 25 > TIMESTAMPDIFF(DAY,date,now()) and TIMESTAMPDIFF(month,date,now()) = 0 and statu = '0' or statu = '2'  or statu = '1'
+	</select>
+	<update id="wzpass" parameterType="String">
+		update ma_lcwzhz
+		set 
+		   statu='1'<!--通知： 0为未审批，1为通过，2为驳回 3为过期-->
+		where
+			sid=#{sid} 
+	</update>
+		<update id="wzfail" parameterType="String">
+		update ma_lcwzhz
+		set 
+		   statu='2'<!--通知： 0为未审批，1为通过，2为驳回 3为过期 -->
+		where
+			sid=#{sid} 
+	</update>
+	<select id="tscl" parameterType="String" resultType="tsloginfo">
+		select * from stu_ts where dormnum=#{dormnum} and 29 > TIMESTAMPDIFF(DAY,date,now()) and TIMESTAMPDIFF(month,date,now()) = 0 and statu = '0' or statu = '1' or statu = '2'
+	</select>
+	<update id="tspass" parameterType="String">
+		update stu_ts
+		set 
+		   statu='1'<!--通知： 0为未审批，1为通过，2为驳回 3为过期-->
+		where
+			sid=#{sid} 
+	</update>
+		<update id="tsfail" parameterType="String">
+		update stu_ts
+		set 
+		   statu='2'<!--通知： 0为未审批，1为通过，2为驳回 3为过期 -->
+		where
+			sid=#{sid} 
+	</update>
+	<select id="lscl" parameterType="String" resultType="lsloginfo">
+		select * from stu_ls where lywnum=#{lywnum} and 29 > TIMESTAMPDIFF(DAY,date,now()) and TIMESTAMPDIFF(month,date,now()) = 0 and statu = '0' or statu = '1' or statu = '2' 
+	</select>
+	<update id="lspass" parameterType="String">
+		update stu_ls
+		set 
+		   statu='1'
+		where
+			sid=#{sid} 
+	</update>
+		<update id="lsfail" parameterType="String">
+		update stu_ls
+		set 
+		   statu='2'<!--通知： 0为未审批，1为通过，2为驳回 3为过期 -->
+		where
+			sid=#{sid} 
+	</update>
+	<select id="bxcl" parameterType="String" resultType="bxloginfo">
+		select * from stu_bx where lywnum=#{lywnum} and 29 > TIMESTAMPDIFF(DAY,date,now()) and TIMESTAMPDIFF(month,date,now()) = 0 and statu = '3' or statu = '1' or statu = '2'or statu = '4'
+	</select>
+	<update id="bxpass" parameterType="String">
+		update stu_bx
+		set 
+		   statu='4'
+		where
+			sid=#{sid} 
+	</update>
+		<update id="bxfail" parameterType="String">
+		update stu_bx
+		set 
+		   statu='2'<!--保修申请： 0为未审批，1为楼级待审批，4为通过，2为驳回 3为过期 -->
+		where
+			sid=#{sid} 
+	</update>
+		<select id="getlywz"  parameterType="ljinfo"  resultType="wzhzinfo">
+		select 
+		 sum(IF(statu='1'and dormnum=#{dormnum},wz1,'0')) AS 'wz1', 
+		 sum(IF(statu='1' and dormnum=#{dormnum},wz2,'0')) AS 'wz2',
+		 sum(IF(statu='1' and dormnum=#{dormnum},wz3,'0')) AS 'wz3',
+		 sum(IF(statu='1'and dormnum=#{dormnum},wz4,'0')) AS 'wz4'
+		from ma_lcwzhz
+		where 25 > TIMESTAMPDIFF(DAY,date,now()) order by date DESC
+	</select>
+	<insert id="addwzlyhz" parameterType="wzhzinfo">
+	insert into ma_lywzhz
+	(wz1,wz2,wz3,wz4,date,dormnum,statu,area)
+	value
+	(#{wz1},#{wz2},#{wz3},#{wz4},#{date},#{dormnum},'0',#{area})
+	</insert>
+	
+	<select id="jycl" parameterType="String" resultType="jyloginfo">
+		select * from stu_jy where lywnum=#{lywnum} and 29 > TIMESTAMPDIFF(DAY,date,now()) and TIMESTAMPDIFF(month,date,now()) = 0 and statu = '0' or statu = '1' or statu = '2'
+	</select>
+	<update id="jypass" parameterType="String">
+		update stu_jy
+		set 
+		   statu='1'
+		where
+			sid=#{sid} 
+	</update>
+		<update id="jyfail" parameterType="String">
+		update stu_jy
+		set 
+		   statu='2'<!--通知： 0为未审批，1为通过，2为驳回 3为过期 -->
+		where
+			sid=#{sid} 
+	</update>
+	<update id="fp" parameterType="fpqsinfo">
+		update stu
+		set 
+		   rmname = #{rmname}
+		where
+			snum=#{snum} 
+	</update>
+	
+		<select id="findRoomBysid" parameterType="String" resultType="roominfo">
+		select * from f_room where sid=#{sid}
+	</select>
+	
+	<update id="fjrz"  parameterType="String">
+		update f_room
+		set 
+		   avaliable = avaliable-1
+		where
+			name=#{rmname} 
+	</update>
+	
+	<update id="lssuccess"  parameterType="int">
+		update stu_ls
+		set 
+		   statu = '4'
+		where
+			sid=#{lssid} 
+	</update>
+	<update id="tsclroom"  parameterType="String">
+		update f_room
+		set 
+		   avaliable = avaliable+1
+		where
+			name=#{rmname} 
+	</update>
+	<update id="tsclstu"  parameterType="String">
+		update stu
+		set 
+		   rmname  = NULL
+		where
+			snum=#{snum} 
+	</update>
+	<select id="getTsBysid" parameterType="int" resultType="tsloginfo">
+		select * from stu_ts where sid=#{sid}
+	</select>
+	<update id="tscllog"  parameterType="int">
+		update stu_ts
+		set 
+		   statu  = '4'<!-- 状态：4 处理完成 -->
+		where
+			sid=#{sid} 
+	</update>
+	<select id="ljtz" parameterType="ljinfo" resultType="lytzinfo">
+		select * from info_ly where dormnum=#{dormnum}
+	</select>
+	<insert id="addljtz" parameterType="lytzinfo">
+	insert into info_ly
+	(content,date,dormnum,statu,lc,area)
+	value
+	(#{content},now(),#{dormnum},'0',#{lc},LEFT(#{dormnum},1))
+	</insert>
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+	</settings>
+	
+	<typeAliases>
+		<typeAlias alias="user" type="com.web.sut.pro.entify.User"/>
+	    <typeAlias alias="stuinfo" type="com.web.sut.pro.entify.StuInfo"/>
+	    <typeAlias alias="tsloginfo" type="com.web.sut.pro.entify.TslogInfo"/>
+		<typeAlias alias="lsloginfo" type="com.web.sut.pro.entify.LslogInfo"/>
+	    <typeAlias alias="jyloginfo" type="com.web.sut.pro.entify.JylogInfo"/>
+	    <typeAlias alias="wzloginfo" type="com.web.sut.pro.entify.WzlogInfo"/>
+	    <typeAlias alias="bxloginfo" type="com.web.sut.pro.entify.BxlogInfo"/>
+	    <typeAlias alias="fdyinfo" type="com.web.sut.pro.entify.FdyInfo"/>    
+	    <typeAlias alias="lcinfo" type="com.web.sut.pro.entify.LcInfo"/>
+		<typeAlias alias="lytzinfo" type="com.web.sut.pro.entify.LytzInfo"/>
+		<typeAlias alias="qjtzinfo" type="com.web.sut.pro.entify.QjtzInfo"/>
+		<typeAlias alias="xjtzinfo" type="com.web.sut.pro.entify.XjtzInfo"/>
+		<typeAlias alias="wz" type="com.web.sut.pro.entify.Wz"/>
+		<typeAlias alias="wzhzinfo" type="com.web.sut.pro.entify.WzhzInfo"/>
+		<typeAlias alias="roominfo" type="com.web.sut.pro.entify.RoomInfo"/>
+		<typeAlias alias="roommate" type="com.web.sut.pro.entify.Roommate"/>
+		<typeAlias alias="qjtzinfo" type="com.web.sut.pro.entify.QjtzInfo"/>
+	    <typeAlias alias="ljinfo" type="com.web.sut.pro.entify.LjInfo"/>
+	     <typeAlias alias="fpqsinfo" type="com.web.sut.pro.entify.FpqsInfo"/>
+	    <typeAlias alias="qjinfo" type="com.web.sut.pro.entify.QjInfo"/>
+	    <typeAlias alias="xjtzinfo" type="com.web.sut.pro.entify.XjtzInfo"/>
+	     <typeAlias alias="fixerinfo" type="com.web.sut.pro.entify.FixerInfo"/>
+	     <typeAlias alias="fixinfo" type="com.web.sut.pro.entify.FixInfo"/>
+	      <typeAlias alias="doctorinfo" type="com.web.sut.pro.entify.DoctorInfo"/>
+	      <typeAlias alias="xjinfo" type="com.web.sut.pro.entify.XjInfo"/>
+	      <typeAlias alias="bxhzinfo" type="com.web.sut.pro.entify.BxhzInfo"/>
+	      <typeAlias alias="jyhzinfo" type="com.web.sut.pro.entify.JyhzInfo"/>
+	      <typeAlias alias="tshzinfo" type="com.web.sut.pro.entify.TshzInfo"/>
+	      <typeAlias alias="shop" type="com.web.sut.pro.entify.Shop"/>
+	</typeAliases>
+
+</configuration>
+
+<!-- 
+	这个配置文件中：
+	标签必须严格按照顺序书写
+	properties
+	settings
+	typeAliases
+	typeHandlers
+	objectFactory
+	objectWrapperFactory
+	plugins
+	environments
+	mappers
+ -->

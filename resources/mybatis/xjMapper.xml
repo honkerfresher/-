@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.sut.pro.dao.XjDao">
+	
+	
+	<select id="xsxmcx" parameterType="String" resultType="stuinfo">
+		select * from stu where name= #{xsxm}
+	</select>
+	
+	<select id="xsqscx" parameterType="String" resultType="stuinfo">
+		select * from stu where rmname= #{xsqs}
+	</select>
+	<select id="xsxhcx" parameterType="String" resultType="stuinfo">
+		select * from stu where snum= #{xsxh}
+	</select>
+    <select id="xszycx" parameterType="String" resultType="stuinfo">
+		select * from stu where majo= #{xszy}
+	</select>
+	 <select id="xslycx" parameterType="String" resultType="stuinfo">
+		select * from stu where dormnum=#{dormnum} order by rmname ASC
+	</select>
+	 <select id="xsqycx" resultType="stuinfo">
+		select * from stu order by rmname ASC
+	</select>
+	<select id="fjqcx"  parameterType="String" resultType="roominfo">
+		select * from f_room order by floor ASC
+	</select>
+    <select id="fjlycx" parameterType="String" resultType="roominfo">
+		select * from f_room where dormnum=#{dormnum} order by floor ASC
+	</select>
+    <select id="checkroommate" parameterType="String" resultType="roommate">
+		select * from stu where rmname=#{rmname}
+	</select>
+    <select id="UsertoXj" parameterType="String" resultType="xjinfo">
+		select * from ma_xj where wnum=#{account} 
+	</select>
+	<select id="wzhzchartYearData" resultType="wzhzinfo">
+		select 
+		 sum(IF(statu='1',wz1,'0')) AS 'wz1', 
+		 sum(IF(statu='1',wz2,'0')) AS 'wz2',
+		 sum(IF(statu='1',wz3,'0')) AS 'wz3',
+		 sum(IF(statu='1',wz4,'0')) AS 'wz4'
+		from ma_qjwzhz 
+		
+		where TIMESTAMPDIFF(year,date,now()) = 0
+	</select>
+	<update id="wzpass" parameterType="String">
+		update ma_lywzhz
+		set 
+		   statu='1'<!--通知： 0为未审批，1为通过，2为驳回 3为过期，4为采购中，5为下发中，6为成功结束-->
+		where
+			sid=#{sid} 
+	</update>
+	<update id="wzfail" parameterType="String">
+		update ma_lywzhz
+		set 
+		   statu='2'<!--通知： 0为未审批，1为通过，2为驳回 3为过期 -->
+		where
+			sid=#{sid} 
+	</update>
+	<select id="wzhzchartYearDataA" resultType="wzhzinfo">
+		select 
+		 sum(IF(statu='1' and area='a',wz1,'0')) AS 'wz1', 
+		 sum(IF(statu='1' and area='a',wz2,'0')) AS 'wz2',
+		 sum(IF(statu='1' and area='a',wz3,'0')) AS 'wz3',
+		 sum(IF(statu='1' and area='a',wz4,'0')) AS 'wz4'
+		from ma_qjwzhz 
+		
+		where TIMESTAMPDIFF(year,date,now()) = 0
+	</select>
+	
+	<select id="wzhzchartYearDataB" resultType="wzhzinfo">
+		select 
+		 sum(IF(statu='1' and area='b',wz1,'0')) AS 'wz1', 
+		 sum(IF(statu='1' and area='b',wz2,'0')) AS 'wz2',
+		 sum(IF(statu='1' and area='b',wz3,'0')) AS 'wz3',
+		 sum(IF(statu='1' and area='b',wz4,'0')) AS 'wz4'
+		from ma_qjwzhz 
+		
+		where TIMESTAMPDIFF(year,date,now()) = 0
+	</select>
+	
+	<select id="wzhzchartYearDataC" resultType="wzhzinfo">
+		select 
+		 sum(IF(statu='1' and area='c',wz1,'0')) AS 'wz1', 
+		 sum(IF(statu='1' and area='c',wz2,'0')) AS 'wz2',
+		 sum(IF(statu='1' and area='c',wz3,'0')) AS 'wz3',
+		 sum(IF(statu='1' and area='c',wz4,'0')) AS 'wz4'
+		from ma_qjwzhz 
+		
+		where TIMESTAMPDIFF(year,date,now()) = 0
+	</select>
+	
+     <select id="bxhzchartYearData" resultType="bxhzinfo">
+		select 
+		sum(IF(statu='5' and LEFT(dormnum,1)='a','1','0')) AS 'atimes', 
+		sum(IF(statu='5' and  LEFT(dormnum,1)='b','1','0')) AS 'btimes', 
+		sum(IF(statu='5' and  LEFT(dormnum,1)='c','1','0')) AS 'ctimes'
+		from stu_bx
+		
+		where TIMESTAMPDIFF(year,date,now()) = 0
+	</select>	
+
+<select id="jyhzchartYearData" resultType="jyhzinfo">
+		select 
+		sum(IF(statu='4' and LEFT(dormnum,1)='a','1','0')) AS 'atimes', 
+		sum(IF(statu='4' and  LEFT(dormnum,1)='b','1','0')) AS 'btimes', 
+		sum(IF(statu='4' and  LEFT(dormnum,1)='c','1','0')) AS 'ctimes'
+		from stu_jy
+		
+		where TIMESTAMPDIFF(year,date,now()) = 0
+	</select>	
+	
+	<select id="tshzchartYearData" resultType="tshzinfo">
+		select 
+		sum(IF(statu='4' and LEFT(dormnum,1)='a','1','0')) AS 'atimes', 
+		sum(IF(statu='4' and  LEFT(dormnum,1)='b','1','0')) AS 'btimes', 
+		sum(IF(statu='4' and  LEFT(dormnum,1)='c','1','0')) AS 'ctimes'
+		from stu_ts
+		
+		where TIMESTAMPDIFF(year,date,now()) = 0
+	</select>	
+	
+	 <select id="studata" resultType="stuinfo">
+		select * from stu 
+	</select>
+	
+	
+	 <select id="findstuBySid" resultType="stuinfo">
+		select * from stu where snum=#{snum} 
+	</select>
+	
+	<update id="stuupdate" parameterType="stuinfo">
+		update stu
+		set 
+		   name=#{name}, rmname=#{rmname}, majo=#{majo}, leve=#{leve}, clas=#{clas}, tele=#{tele}, fdynum=#{fdynum}, home=#{home}<!--通知： 0为未审批，1为通过，2为驳回 3为过期 -->
+		where
+			snum=#{snum} 
+	</update>
+	
+	<delete id="studelet" parameterType="int" >
+	delete
+	from stu
+	where snum=#{snum}
+	</delete>
+	
+	<update id="assignconfirm" parameterType="stuinfo">
+		update stu
+		set 
+		   secrid='10010'<!--通知： 0为未审批，1为通过，2为驳回 3为过期 -->
+		where
+			snum=#{snum} 
+	</update>
+	
+	 <select id="lcmanagerWarn" parameterType="String" resultType="stuinfo">
+		select * from stu where LEFT(rmname,4)=#{dorm} and secrid='10010'
+	</select>
+	
+	 <select id="fjareaCdata" resultType="roominfo">
+		select * from f_room  where LEFT(dormnum,1)='c' order by name ASC
+	</select>
+	 <select id="fjareaBdata" resultType="roominfo">
+		select * from f_room  where LEFT(dormnum,1)='b' order by name ASC
+	</select>
+	 <select id="fjareaAdata" resultType="roominfo">
+		select * from f_room  where LEFT(dormnum,1)='a' order by name ASC
+	</select>
+	<select id="findroomBysid"  parameterType="int" resultType="roominfo">
+		select * from f_room  where sid=#{sid}
+	</select>
+	<select id="qjwzhzYear"   resultType="wzhzinfo">
+		select * from ma_qjwzhz  where TIMESTAMPDIFF(year,date,now()) = 0
+	</select>
+	
+	<select id="getshop"   resultType="shop">
+		select * from shop
+	</select>
+	<select id="getoutter"   resultType="shop">
+		select * from shop_outter
+	</select>
+	
+		<select id="alluserdata"   resultType="user">
+		select * from sys_user
+	</select>
+	<delete id="userdelet" parameterType="String" >
+	delete
+	from sys_user
+	where account=#{account}
+	</delete>
+	
+	<update id="userupdate" parameterType="user">
+		update sys_user
+		set 
+		   name=#{name} ,password=#{password}, tele=#{tele}<!--通知： 0为未审批，1为通过，2为驳回 3为过期 -->
+		where
+			account=#{account} 
+	</update>
+	<select id="finduserByacc"   parameterType="String"  resultType="user">
+		select * from sys_user where account=#{account}
+	</select>
+	
+	<insert id="stuadd" parameterType="stuinfo">
+	insert into stu
+	(name,snum,rmname,majo,leve,clas,tele,fdynum,home)
+	value
+	(#{name},#{snum},#{rmname},#{majo},#{leve},#{clas},#{tele},#{fdynum},#{home})
+	</insert>
+	<insert id="useradd" parameterType="user">
+	insert into stu
+	(name,account,password,tele)
+	value
+	(#{name},#{account},#{password},#{tele})
+	</insert>
+	
+	<insert id="addxjtz" parameterType="xjtzinfo">
+	insert into info_xj
+	(statu,content,area,date)
+	value
+	('0',#{content},#{area},now())
+	</insert>
+	
+	<select id="xjtz"  resultType="xjtzinfo">
+		select * from info_xj
+	</select>
+</mapper>

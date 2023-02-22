@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.sut.pro.dao.StuDao">
+	
+	<select id="selRoomMate" parameterType="stuinfo" resultType="stuinfo">
+		select * from stu where  rmname= #{rmname}
+	</select>
+	
+	<select id="selrmname" parameterType="string" resultType="String">
+		select rmname from stu where  snum= #{account}
+	</select>
+	
+	<select id="selwzlclist" parameterType="lcinfo" resultType="wzloginfo">
+		select * from stu_wz where dormnum = #{dormnum} and lc= #{lc}
+	</select>
+	
+	<select id="selbxlclist" parameterType="lcinfo" resultType="bxloginfo">
+		select * from stu_bx where dormnum = #{dormnum} and lc= #{lc}
+	</select>
+	
+	<update id="wzlcpass" parameterType="String">
+		update stu_wz 
+		set 
+		   statu='1'
+		where
+			sid = #{sid} 
+	</update>
+	
+	<update id="wzlcfail" parameterType="String">
+		update stu_wz 
+		set 
+		   statu='2'
+		where
+			sid = #{sid} 
+	</update>
+	
+	<update id="lccopy" parameterType="String">
+		update info_ly
+		set 
+		   statu='1'
+		where
+			sid = #{sid} 
+	</update>
+	<insert id="addTslog" parameterType="tsloginfo">
+	insert into stu_ts
+	(rmname,snum,lywnum,reason,date,statu,dormnum)
+	value
+	(#{rmname},#{snum},#{lywnum},#{reason},#{date},'0',#{dormnum})
+	</insert>
+
+	<insert id="addLslog" parameterType="lsloginfo">
+	insert into stu_ls
+	(snum,lywnum,reason,date,enddate,statu)
+	value
+	(#{snum},#{lywnum},#{reason},#{date},#{enddate},'0')
+	</insert>
+	
+	<insert id="addjylog" parameterType="jyloginfo">
+	insert into stu_jy
+	(snum,rmname,content,date,dormnum,statu)
+	value
+	(#{snum},#{rmname},#{content},#{date},#{dormnum},'0')
+	</insert>
+	
+	<insert id="addwzlog" parameterType="wzloginfo">
+	insert into stu_wz
+	(snum,rmname,content,date,dormnum,lc,statu,amount)
+	value
+	(#{snum},#{rmname},#{content},#{date},#{dormnum},#{lc},'0',#{amount})
+	</insert>
+	
+	<insert id="addbxlog" parameterType="wzloginfo">
+	insert into stu_wz
+	(snum,rmname,content,date,dormnum,lc,statu)
+	value
+	(#{snum},#{rmname},#{content},#{date},#{dormnum},#{lc},'0')
+	</insert>
+	
+	<select id="selTslist" parameterType="stuinfo" resultType="tsloginfo">
+		select * from stu_ts where snum =  #{snum}
+	</select>
+	<select id="selWzlist" parameterType="stuinfo" resultType="wzloginfo">
+		select * from stu_wz where snum =  #{snum}
+	</select>
+	<select id="selLslist" parameterType="stuinfo" resultType="lsloginfo">
+		select * from stu_ls where snum =  #{snum}
+	</select>
+	<select id="selJylist" parameterType="stuinfo" resultType="jyloginfo">
+		select * from stu_jy where snum =  #{snum}
+	</select>
+	<select id="selBxlist" parameterType="stuinfo" resultType="bxloginfo">
+		select * from stu_bx where snum =  #{snum}
+	</select>
+	<select id="selFdy" parameterType="stuinfo" resultType="fdyinfo">
+		select * from fdy where leve =  #{leve}
+	</select>
+	<select id="findMe" parameterType="String" resultType="stuinfo">
+		select * from stu where snum =  #{snum}
+	</select>
+	<select id="lytz" parameterType="lytzinfo" resultType="lytzinfo"><!-- 楼层获取楼宇通知 -->
+		select * from info_ly where dormnum = #{dormnum} and lc = #{lc} and statu='0'
+	</select>
+	<select id="getwzname"  resultType="wz">
+		select * from stu_wzlist
+	</select>
+	
+	<select id="getwzlcsum"  parameterType="lcinfo"  resultType="wzhzinfo">
+		select 
+		 dormnum,
+		 lc,
+		 sum(IF(content='面包'and statu='1' and lc=#{lc}and dormnum=#{dormnum},amount,'0')) AS 'wz1', 
+		 sum(IF(content='香肠'and statu='1' and lc=#{lc}and dormnum=#{dormnum},amount,'0')) AS 'wz2',
+		 sum(IF(content='汽水'and statu='1' and lc=#{lc}and dormnum=#{dormnum},amount,'0')) AS 'wz3',
+		 sum(IF(content='泡面'and statu='1' and lc=#{lc}and dormnum=#{dormnum},amount,'0')) AS 'wz4'
+		from stu_wz
+		where 8 > TIMESTAMPDIFF(DAY,date,now()) order by date DESC
+	</select>
+	<insert id="addwzlchz" parameterType="wzhzinfo">
+	insert into ma_lcwzhz
+	(wz1,wz2,wz3,wz4,date,dormnum,lc,statu)
+	value
+	(#{wz1},#{wz2},#{wz3},#{wz4},#{date},#{dormnum},#{lc},'0')
+	</insert>
+	
+	<update id="wzgq" parameterType="lcinfo">
+		update stu_wz 
+		set 
+		   statu='3'<!-- 申请信息：0为未处理，1为通过，2为驳回，3为过期 -->
+		where
+			dormnum = #{dormnum} and lc=#{lc} and   TIMESTAMPDIFF(DAY,date,now()) > 5 and TIMESTAMPDIFF(month,date,now())=0
+	</update>
+	<update id="lytzgq" parameterType="lcinfo">
+		update info_ly 
+		set 
+		   statu='2'<!-- 通知：0为未收到，1为收到，2为过期 -->
+		where
+			dormnum = #{dormnum} and lc=#{lc} and   TIMESTAMPDIFF(DAY,date,now()) > 14 and TIMESTAMPDIFF(month,date,now())=0
+	</update>
+</mapper>

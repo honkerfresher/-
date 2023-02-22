@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.sut.pro.dao.IUserDao">
+	
+	<select id="selectUserByAccount" parameterType="user" resultType="user">
+		select * from sys_user where account = #{account}
+	</select>
+	
+	<select id="selectByAccount" parameterType="string" resultType="user">
+		select * from sys_user where account = #{account}
+	</select>
+	
+	
+
+    <select id="selectBySid" parameterType="String" resultType="user">
+		select * from sys_user where sid = #{sid}
+	</select>
+
+	<select id="selAllAccList" parameterType="user" resultType="user">
+		select
+			a.keyid as keyid,a.account as account, b.name as level,a.name as name,a.info02 as info02
+		from
+			(select * from sys_user  where  keyid = #{keyid} and level != '10001')a
+		left join role_info_tab b on(a.level=b.keyid)
+		group by a.account
+	</select>
+	
+	<insert id="addAccount" parameterType="user">
+		insert into sys_user 
+		(keyid,name,account,password,tel,reg_date,level,status)
+		value
+		(#{keyid},#{name},#{account},#{tel},#{reg_date},#{password},#{level},#{status})
+	</insert>
+	<delete id="delAccount" parameterType="string">
+		delete
+		from
+			sys_user 
+		where 
+			keyid = #{keyid}
+	</delete>
+	<select id="selPersonal" parameterType="user" resultType="user" >
+		select
+			*
+		from
+			sys_user 
+		where 
+			keyid = #{keyid} and level = '10001'
+	</select>
+	<update id="updatePersonal" parameterType="user">
+		update sys_user 
+		set 
+			account=#{account},tel=#{tel},name=#{name},password=#{password},status=#{status},level=#{level}
+		where
+			keyid = #{keyid} 
+	</update>
+	
+	<select id="selectAllUser" parameterType="user" resultType="user">
+		select * from sys_user where status = '1'
+	</select>
+	
+	<select id="UsertoStu" parameterType="user" resultType="stuinfo">
+		select * from stu where snum=#{account}
+	</select>
+	
+	
+</mapper>
